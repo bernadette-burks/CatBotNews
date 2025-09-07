@@ -1,6 +1,6 @@
 # CatBotNews
 
-## CatBot News Agent 🐱📰
+CatBot News Agent 🐱📰
 
 PUBLIC LINK TO CURRENT VERSION OF APP: https://catbotnews.streamlit.app/
 
