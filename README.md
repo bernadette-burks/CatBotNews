@@ -49,5 +49,5 @@ streamlit run app.py`
 
 ## Author
 Bernadette Burks\
-September 7, 2025\
+September 7, 2025
 
