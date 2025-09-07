@@ -1,5 +1,5 @@
-import os, random
-import requests
+import streamlit as st
+import random, requests
 
 class CatAgent:
     CAT_COMMENTS = [
