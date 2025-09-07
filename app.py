@@ -2,14 +2,13 @@ import streamlit as st
 import os
 from cat_agent import CatAgent
 
-# --- API Key Setup ---
+# --- API Key Handling ---
 api_key = None
 try:
-    api_key = st.secrets["NEWSAPI_KEY"]  # Works on Streamlit Cloud
+    api_key = st.secrets["NEWSAPI_KEY"]  # Streamlit Cloud
 except Exception:
-    api_key = os.getenv("NEWSAPI_KEY")   # Works locally
+    api_key = os.getenv("NEWSAPI_KEY")   # Local dev
 
-# Pass this to the CatAgent
 agent = CatAgent()
 if api_key:
     agent.api_key = api_key
@@ -20,7 +19,7 @@ st.set_page_config(page_title="CatBot News 🐾", layout="centered")
 st.markdown("# CatBot News 🐱📰")
 st.markdown("Your feline friend who fetches headlines and gives playful cat commentary!")
 
-# --- Sidebar Settings ---
+# --- Sidebar ---
 with st.sidebar:
     st.header("Settings")
     category = st.selectbox(
@@ -29,9 +28,9 @@ with st.sidebar:
         index=0
     )
     num_articles = st.slider("Number of headlines to fetch", 1, 5, 3)
-    st.write("⚙️ Make sure you set `NEWSAPI_KEY` either in Streamlit secrets or as an environment variable.")
+    st.write("⚙️ Set `NEWSAPI_KEY` in Streamlit secrets or as an environment variable.")
 
-# --- User Input ---
+# --- Input ---
 st.subheader("Ask your CatBot")
 user_input = st.text_area(
     "Type a question or topic (e.g., 'Show me today's tech news')",
@@ -41,7 +40,7 @@ user_input = st.text_area(
 
 debug_mode = st.checkbox("Show raw API response (debug)", value=False)
 
-# --- Action Buttons ---
+# --- Actions ---
 col1, col2 = st.columns([1,1])
 
 with col1:
@@ -50,8 +49,9 @@ with col1:
             st.warning("Please enter a topic or question first!")
         else:
             with st.spinner("CatBot sniffing out headlines..."):
-                headlines = agent.fetch_news(user_input, category=category, n=num_articles, debug=debug_mode)
-
+                headlines = agent.fetch_news(
+                    user_input, category=category, n=num_articles, debug=debug_mode
+                )
             st.markdown("### CatBot says:")
             for h in headlines:
                 st.markdown(f"- {h}")
@@ -63,4 +63,4 @@ with col2:
 
 # --- Footer ---
 st.markdown("---")
-st.markdown("💡 **Notes:** CatBot adds a playful twist to live headlines. News is powered by [NewsAPI.org](https://newsapi.org).")
+st.markdown("💡 **Notes:** CatBot adds a playful twist to live headlines. Powered by [NewsAPI.org](https://newsapi.org).")
