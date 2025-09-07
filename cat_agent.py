@@ -12,9 +12,9 @@ class CatAgent:
     ]
 
     CAT_FACTS = [
-        "Cats sleep 12–16 hours a day. 💤",
+        "Cats sleep 12-16 hours a day. 💤",
         "A group of cats is called a clowder. 😸",
-        "Cats have five toes on their front paws, but only four on the back. 🐾",
+        "Cats have five toes on front paws, four on back. 🐾",
         "A cat can rotate its ears 180 degrees. 😺",
         "Whiskers help cats measure gaps and spaces! 🐱"
     ]
@@ -22,12 +22,16 @@ class CatAgent:
     NEWSAPI_ENDPOINT = "https://newsapi.org/v2/top-headlines"
 
     def __init__(self):
-        # Pull API key from environment (works with Streamlit secrets too!)
+        # Pull key from environment by default
         self.api_key = os.getenv("NEWSAPI_KEY", None)
 
     def fetch_news(self, topic: str, category="general", n=3, debug=False):
         if not self.api_key:
-            return [f"Meow! 🐾 I need a `NEWSAPI_KEY` to fetch live news. Here's a pretend headline about '{topic}'!"]
+            return [
+                f"Meow! 🐾 I need a NEWSAPI_KEY to fetch live news. "
+                f"Here's a pretend headline about '{topic}'."
+                for _ in range(n)
+            ]
 
         params = {
             "apiKey": self.api_key,
@@ -38,15 +42,16 @@ class CatAgent:
         }
 
         try:
-            resp = requests.get(self.NEWSAPI_ENDPOINT, params=params, timeout=10)
+            resp = requests.get(self.NEWSAPI_ENDPOINT, params=params)
             data = resp.json()
 
             if debug:
                 return [f"DEBUG: {data}"]
 
             articles = data.get("articles", [])
+            headlines = []
 
-            # If no results, retry with just category
+            # fallback if no matches for topic
             if not articles:
                 fallback_params = {
                     "apiKey": self.api_key,
@@ -54,25 +59,25 @@ class CatAgent:
                     "pageSize": n,
                     "language": "en"
                 }
-                resp = requests.get(self.NEWSAPI_ENDPOINT, params=fallback_params, timeout=10)
+                resp = requests.get(self.NEWSAPI_ENDPOINT, params=fallback_params)
                 data = resp.json()
                 articles = data.get("articles", [])
 
-                if not articles:
-                    return [f"Meow! 🐾 No articles available right now for '{topic}' or category '{category}'. Try again later!"]
+                if articles:
+                    headlines.append(
+                        f"Meow! Couldn't find articles for '{topic}', "
+                        f"so here are the top headlines in '{category}' instead:"
+                    )
+                else:
+                    return ["Meow! 🐾 No articles available at the moment. Try again later!"]
 
-                # Add fallback message
-                headlines = [f"Meow! Couldn’t find news for '{topic}', so here are some '{category}' headlines instead:"]
-            else:
-                headlines = []
-
-            # Add cat commentary to each article
-            for a in articles[:n]:
+            # add commentary
+            for a in articles:
                 title = a.get("title", "No title")
                 comment = random.choice(self.CAT_COMMENTS)
                 headlines.append(f"{title} — {comment}")
 
-            return headlines
+            return headlines[:n]
 
         except Exception as e:
             return [f"Oops! CatBot got distracted 😿 Error: {e}"]
