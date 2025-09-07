@@ -1,10 +1,9 @@
 # CatBotNews
 
-\# CatBot News Agent 🐱📰
+## CatBot News Agent 🐱📰
 
+PUBLIC LINK TO CURRENT VERSION OF APP: https://catbotnews.streamlit.app/
 
-
-\*\*Purpose:\*\*  
 
 CatBot News is a playful cat-themed agent that fetches live news headlines from NewsAPI.org and delivers them with expressive, whimsical cat commentary. If a search query returns no results, it automatically fetches top headlines in the selected category so CatBot always has something to say!
 
