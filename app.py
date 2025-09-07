@@ -1,5 +1,9 @@
+
+import streamlit as st
 import os
-import streamlit as st api_key = st.secrets["OPENAI_API_KEY"]
+
+api_key = os.getenv("NEWSAPI_KEY")
+
 from cat_agent import CatAgent
 
 st.set_page_config(page_title="CatBot News 🐾", layout="centered")
