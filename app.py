@@ -2,6 +2,9 @@ import os
 import streamlit as st
 from cat_agent import CatAgent
 
+import streamlit as st
+        api_key = st.secrets["OPENAI_API_KEY"]
+
 st.set_page_config(page_title="CatBot News 🐾", layout="centered")
 
 st.markdown("# CatBot News 🐱📰")
